@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <head>
-    <title>Visited Places</title>
+    <title>Simple Map of Visited Places</title>
     <script src="d3/d3.v3.min.js"></script>
     <script src="d3/topojson.v1.min.js"></script>
     <script src="datamaps/datamaps.world.min.js"></script>
@@ -17,13 +17,67 @@
             border-radius: 5px;
             pointer-events: none;
             font-size: 12px;
-            z-index: 1000; /* Ensure tooltip is above everything */
+            z-index: 1000;
         }
+    
+        /* 1）地图容器：占满一屏，高度可自适应 */
+        #map1 {
+            position: relative;
+            width: 100%;
+            height: 100%;        /* 你也可以改成 80vh 等 */
+            background-color: #dbedff;  /* 你之前要的浅蓝背景 */
+        }
+    
+        /* 2）让 Datamaps 生成的 SVG 填满容器 */
+        #map1 svg {
+            width: 100%;
+            height: 100%;
+            display: block;       /* 去掉多余空隙，防止出现额外的白条 */
+        }
+        /* 图例整体外观 */
+        .legend {
+            position: absolute;
+            bottom: 80px;              /* 你可调整为更满意的位置 */
+            left: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            z-index: 2000;          /* 高于 .hoverinfo (1000) */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* 色块 */
+        .legend .color {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            border-radius: 3px;
+            vertical-align: middle;
+        }
+
+        /* 分别对应 fillKey 颜色 */
+        .legend .lived { background: #1E90FF; }
+        .legend .stayed { background: #90E0BE; }
+        .legend .visited { background: #F14C4C; }
+        .legend .passed_through { background: #F0F0F0; }
+        .legend .plan { background: #FFF400; }
+
     </style>
 </head>
 <body>
     <h1>Visited Places</h1>
-    <div id="map1" style="position: relative; width: 100%; height: 700px;"></div>
+    <div id="map1"></div>
+    <div id="legend" class="legend">
+        <div><span class="color lived"></span> Lived (> 3 month)</div>
+        <div><span class="color stayed"></span> Stayed (> 1 week)</div>
+        <div><span class="color visited"></span> Visited</div>
+        <div><span class="color passed_through"></span> Passed through</div>
+        <div><span class="color plan"></span> Plan</div>
+    </div>
+    
 
     <script src="countries.js"></script>
     <script src="cities.js"></script>
@@ -35,14 +89,17 @@
         element: document.getElementById('map1'),
         projection: 'mercator',
         responsive: true,
-        height: 700,
         fills: {
             defaultFill: '#D0D0D0',
-            lived: '#1E90FF', // lived > 3 months, Blue
-            stayed: '#90E0BE', // stayed > 1 week, Green
-            visited: '#b0b0b0', // Red
-            passed_through: '#F0F0F0', // Grey
-            planed:'FFF400', //Yellow
+
+            country_visited: '#A0C0A0',
+            country_planning:'#A0C0A0',
+            
+            city_lived: '#1E90FF', // Blue
+            city_stayed: '#90E0BE', // Green
+            city_visited: '#F14C4C', // Red
+            city_passed_through: '#F0F0F0', // Grey
+            city_planning:'#FFF400', //Yellow
             // city: '#FC8050'
         },
         geographyConfig: {
