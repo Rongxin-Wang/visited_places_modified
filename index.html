@@ -4,7 +4,8 @@
     <title>Simple Map of Visited Places</title>
     <script src="d3/d3.v3.min.js"></script>
     <script src="d3/topojson.v1.min.js"></script>
-    <script src="datamaps/datamaps.world.min.js"></script>
+    <script src="datamaps/datamaps.world.hires.min.js"></script>
+    <!-- optional: delete 'hires' to show a low res map (not recommend)-->
     <style>
         svg {
             overflow: hidden;
@@ -20,35 +21,35 @@
             z-index: 1000;
         }
     
-        /* 1）地图容器：占满一屏，高度可自适应 */
+        /* Map container fills the full viewport height */
         #visited_map {
             position: relative;
             width: 100%;
-            height: 100%;        /* 你也可以改成 80vh 等 */
-            background-color: #dbedff;  /* 你之前要的浅蓝背景 */
+            height: 100%;        /* You can change this to 80vh or similar */
+            background-color: #dbedff;  /* Light blue background as requested */
         }
     
-        /* 2）让 Datamaps 生成的 SVG 填满容器 */
+        /* Make the Datamaps-generated SVG fill the container */
         #visited_map svg {
             width: 100%;
             height: 100%;
-            display: block;       /* 去掉多余空隙，防止出现额外的白条 */
+            display: block;       /* Remove extra gaps to avoid white bars */
         }
-        /* 图例整体外观 */
+        /* Legend container appearance */
         .legend {
             position: absolute;
-            bottom: 80px;              /* 你可调整为更满意的位置 */
+            bottom: 80px;              /* Adjust as needed for preferred position */
             left: 20px;
             background: rgba(255, 255, 255, 0.85);
             padding: 10px 14px;
             border-radius: 8px;
             font-size: 14px;
             line-height: 20px;
-            z-index: 2000;          /* 高于 .hoverinfo (1000) */
+            z-index: 2000;          /* Higher than .hoverinfo (1000) */
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
 
-        /* 色块 */
+        /* Legend color markers */
         .legend .color {
             display: inline-block;
             width: 16px;
@@ -58,7 +59,7 @@
             vertical-align: middle;
         }
 
-        /* 分别对应 fillKey 颜色 */
+        /* Colors correspond to each fillKey */
         .legend .lived { background: #1E90FF; }
         .legend .stayed { background: #90E0BE; }
         .legend .visited { background: #F14C4C; }
@@ -104,7 +105,8 @@
         },
         geographyConfig: {
             highlightOnHover: true,
-            highlightFillColor: '#A0C0A0',
+            highlightFillColor: 'A0A0A0', 
+            // no # before A0A0A0 on purpose, because highlight colors might cause misunderstanding
             highlightBorderColor: '#F0F0F0',
             popupOnHover: true,
             popupTemplate: function(geography, data) {
